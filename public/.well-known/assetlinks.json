@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.genzopia.Instagame",
+    "sha256_cert_fingerprints": [
+      "48:6B:3F:51:16:DB:55:D4:E5:9C:37:18:38:38:5D:BD:94:66:23:8A:94:D7:BC:E8:1B:2B:95:24:65:E1:43:D9"
+    ]
+  }
+}]
