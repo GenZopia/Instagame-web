@@ -1,10 +1,12 @@
 interface GamePageProps {
-  params: {
+  params: Promise<{
     gameId: string
-  }
+  }>
 }
 
-export default function GamePage({ params }: GamePageProps) {
+export default async function GamePage({ params }: GamePageProps) {
+  const { gameId } = await params
+  
   return (
     <main style={{ 
       display: 'flex', 
@@ -15,7 +17,7 @@ export default function GamePage({ params }: GamePageProps) {
       fontFamily: 'system-ui, -apple-system, sans-serif',
       gap: '1rem'
     }}>
-      <h1>Game: {params.gameId}</h1>
+      <h1>Game: {gameId}</h1>
       <p>This page will redirect to the app if installed</p>
     </main>
   )
