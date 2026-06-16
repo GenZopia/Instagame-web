@@ -18,7 +18,7 @@ export default async function GamePage({ params }: GamePageProps) {
       gap: '1rem'
     }}>
       <h1>Game: {gameId}</h1>
-      <p>This page will redirect to the app if installed</p>
+      <p>This page will redirect to the app if installed.</p>
     </main>
   )
 }
