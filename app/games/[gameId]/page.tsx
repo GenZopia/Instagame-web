@@ -5,7 +5,10 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import GameDeeplinkClient from './GameDeeplinkClient'
 
-interface Props { params: Promise<{ gameId: string }> }
+interface Props {
+  params: Promise<{ gameId: string }>
+  searchParams: Promise<{ img?: string }>
+}
 
 const FIREBASE_DB = 'https://instagame-452906-default-rtdb.firebaseio.com'
 const R2_BASE = 'https://cdn.genzopia.com'
@@ -15,10 +18,8 @@ async function getGameImage(gameId: string): Promise<string> {
   try {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 3000)
-
     const gameRes = await fetch(`${FIREBASE_DB}/games/${gameId}.json`, { signal: controller.signal })
     clearTimeout(timeout)
-
     if (!gameRes.ok) return FALLBACK_IMAGE
     const game = await gameRes.json()
     const photoId: string = game?.photo_id
@@ -28,21 +29,22 @@ async function getGameImage(gameId: string): Promise<string> {
     const timeout2 = setTimeout(() => controller2.abort(), 3000)
     const photoRes = await fetch(`${FIREBASE_DB}/photos/${photoId}.json`, { signal: controller2.signal })
     clearTimeout(timeout2)
-
     if (!photoRes.ok) return FALLBACK_IMAGE
     const photo = await photoRes.json()
     const fileExt: string = photo?.file_ext ?? photo?.file_name?.split('.').pop() ?? 'jpg'
-
-    const url = `${R2_BASE}/photo/${photoId}.${fileExt}`
-    return url || FALLBACK_IMAGE
+    return `${R2_BASE}/photo/${photoId}.${fileExt}` || FALLBACK_IMAGE
   } catch {
     return FALLBACK_IMAGE
   }
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { gameId } = await params
-  const image = await getGameImage(gameId)
+  const { img } = await searchParams
+
+  // Use img query param if provided (from Android share), else fetch from Firebase
+  const image = img ? decodeURIComponent(img) : await getGameImage(gameId)
+
   return {
     metadataBase: new URL('https://www.genzopia.com'),
     openGraph: {
@@ -67,8 +69,6 @@ export default async function GamePage({ params }: Props) {
   const headersList = await headers()
   const ua = headersList.get('user-agent') ?? ''
 
-  // Crawlers/bots: stay on page so they read OG tags
-  // Desktop real users: redirect to home
   if (!isMobile(ua) && !isCrawler(ua)) redirect('/')
 
   return <GameDeeplinkClient gameId={gameId} />
