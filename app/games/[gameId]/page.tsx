@@ -13,25 +13,28 @@ const FALLBACK_IMAGE = 'https://www.genzopia.com/genzopia-banner.png'
 
 async function getGameImage(gameId: string): Promise<string> {
   try {
-    // Fetch game node to get photo_id
-    const gameRes = await fetch(`${FIREBASE_DB}/games/${gameId}.json`, { cache: 'no-store' })
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 3000)
+
+    const gameRes = await fetch(`${FIREBASE_DB}/games/${gameId}.json`, { signal: controller.signal })
+    clearTimeout(timeout)
+
     if (!gameRes.ok) return FALLBACK_IMAGE
     const game = await gameRes.json()
-    if (!game) return FALLBACK_IMAGE
-
-    const photoId: string = game.photo_id
+    const photoId: string = game?.photo_id
     if (!photoId) return FALLBACK_IMAGE
 
-    // Fetch photo node to get file_ext
-    const photoRes = await fetch(`${FIREBASE_DB}/photos/${photoId}.json`, { cache: 'no-store' })
+    const controller2 = new AbortController()
+    const timeout2 = setTimeout(() => controller2.abort(), 3000)
+    const photoRes = await fetch(`${FIREBASE_DB}/photos/${photoId}.json`, { signal: controller2.signal })
+    clearTimeout(timeout2)
+
     if (!photoRes.ok) return FALLBACK_IMAGE
     const photo = await photoRes.json()
+    const fileExt: string = photo?.file_ext ?? photo?.file_name?.split('.').pop() ?? 'jpg'
 
-    const fileExt: string = photo?.file_ext
-      ?? photo?.file_name?.split('.').pop()
-      ?? 'jpg'
-
-    return `${R2_BASE}/photo/${photoId}.${fileExt}`
+    const url = `${R2_BASE}/photo/${photoId}.${fileExt}`
+    return url || FALLBACK_IMAGE
   } catch {
     return FALLBACK_IMAGE
   }
@@ -45,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: 'website',
       url: `https://www.genzopia.com/games/${gameId}`,
-      images: [{ url: image, secureUrl: image }],
+      images: image,
     },
     twitter: { card: 'summary', images: [image] },
   }
