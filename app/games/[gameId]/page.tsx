@@ -8,7 +8,7 @@ import GameDeeplinkClient from './GameDeeplinkClient'
 interface Props { params: Promise<{ gameId: string }> }
 
 const FIREBASE_DB = 'https://instagame-452906-default-rtdb.firebaseio.com'
-const R2_BASE = 'https://pub-0caba249d019456b9181ce1575ef825e.r2.dev'
+const R2_BASE = 'https://cdn.genzopia.com'
 const FALLBACK_IMAGE = 'https://www.genzopia.com/genzopia-banner.png'
 
 async function getGameImage(gameId: string): Promise<string> {
