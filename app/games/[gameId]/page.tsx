@@ -49,6 +49,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+function isCrawler(ua: string) {
+  return /facebookexternalhit|whatsapp|twitterbot|linkedinbot|slackbot|telegrambot|discordbot|googlebot|bingbot|crawler|spider|bot/i.test(ua)
+}
+
 function isMobile(ua: string) {
   return /android|iphone|ipad|ipod|mobile/i.test(ua)
 }
@@ -58,7 +62,9 @@ export default async function GamePage({ params }: Props) {
   const headersList = await headers()
   const ua = headersList.get('user-agent') ?? ''
 
-  if (!isMobile(ua)) redirect('/')
+  // Crawlers/bots: stay on page so they read OG tags
+  // Desktop real users: redirect to home
+  if (!isMobile(ua) && !isCrawler(ua)) redirect('/')
 
   return <GameDeeplinkClient gameId={gameId} />
 }
