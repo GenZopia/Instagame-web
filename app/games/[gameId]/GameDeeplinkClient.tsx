@@ -5,32 +5,11 @@ import Image from 'next/image'
 const PLAY_STORE_APP = 'market://details?id=com.genzopia.Instagame'
 const PLAY_STORE_WEB = 'https://play.google.com/store/apps/details?id=com.genzopia.Instagame'
 
-export default function GameDeeplinkClient({ gameId }: { gameId: string }) {
+export default function GameDeeplinkClient({ gameId: _ }: { gameId: string }) {
   useEffect(() => {
-    const appLink = `genzopia://games/${gameId}`
-
-    // Try app deeplink first
-    window.location.href = appLink
-
-    // After 2s, try Play Store app (market://), then web fallback
-    const timer = setTimeout(() => {
-      window.location.href = PLAY_STORE_APP
-      // If market:// fails (not on Android), fall back to web after 500ms
-      setTimeout(() => {
-        window.location.href = PLAY_STORE_WEB
-      }, 500)
-    }, 2000)
-
-    // Cleanup if app opens (page becomes hidden)
-    const handleVisibilityChange = () => {
-      if (document.hidden) clearTimeout(timer)
-    }
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => {
-      clearTimeout(timer)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [gameId])
+    window.location.href = PLAY_STORE_APP
+    setTimeout(() => { window.location.href = PLAY_STORE_WEB }, 500)
+  }, [])
 
   return (
     <main style={{
