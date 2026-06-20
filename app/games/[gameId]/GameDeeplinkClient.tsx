@@ -5,11 +5,18 @@ import Image from 'next/image'
 const PLAY_STORE_APP = 'market://details?id=com.genzopia.Instagame'
 const PLAY_STORE_WEB = 'https://play.google.com/store/apps/details?id=com.genzopia.Instagame'
 
-export default function GameDeeplinkClient({ gameId: _ }: { gameId: string }) {
+export default function GameDeeplinkClient({ gameId }: { gameId: string }) {
   useEffect(() => {
-    window.location.href = PLAY_STORE_APP
-    setTimeout(() => { window.location.href = PLAY_STORE_WEB }, 500)
-  }, [])
+    // Try app deeplink
+    window.location.href = `genzopia://games/${gameId}`
+    // If app not installed, open Play Store app after 2s
+    const timer = setTimeout(() => {
+      window.location.href = PLAY_STORE_APP
+    }, 2000)
+    const onHide = () => { if (document.hidden) clearTimeout(timer) }
+    document.addEventListener('visibilitychange', onHide)
+    return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', onHide) }
+  }, [gameId])
 
   return (
     <main style={{
