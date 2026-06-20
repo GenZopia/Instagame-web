@@ -7,7 +7,7 @@ import GameDeeplinkClient from './GameDeeplinkClient'
 
 interface Props {
   params: Promise<{ gameId: string }>
-  searchParams: Promise<{ img?: string }>
+  searchParams: Promise<{ img?: string; name?: string }>
 }
 
 const FIREBASE_DB = 'https://instagame-452906-default-rtdb.firebaseio.com'
@@ -40,19 +40,21 @@ async function getGameImage(gameId: string): Promise<string> {
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { gameId } = await params
-  const { img } = await searchParams
-
-  // Use img query param if provided (from Android share), else fetch from Firebase
+  const { img, name } = await searchParams
   const image = img ? decodeURIComponent(img) : await getGameImage(gameId)
+  const title = name ? `${decodeURIComponent(name)} – Play Free on Genzopia 🎮` : 'Play Free on Genzopia 🎮'
+  const description = name ? `Play ${decodeURIComponent(name)} free on Genzopia – 100+ games, no download needed!` : 'Play free games on Genzopia – 100+ games, no download needed!'
 
   return {
     metadataBase: new URL('https://www.genzopia.com'),
     openGraph: {
       type: 'website',
+      title,
+      description,
       url: `https://www.genzopia.com/games/${gameId}`,
       images: image,
     },
-    twitter: { card: 'summary', images: [image] },
+    twitter: { card: 'summary', title, images: [image] },
   }
 }
 
