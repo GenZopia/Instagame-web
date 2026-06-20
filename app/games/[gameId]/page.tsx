@@ -41,9 +41,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { gameId } = await params
   const image = await getGameImage(gameId)
   return {
+    metadataBase: new URL('https://www.genzopia.com'),
     openGraph: {
-      images: [{ url: image, width: 320, height: 320 }],
+      type: 'website',
       url: `https://www.genzopia.com/games/${gameId}`,
+      images: [{ url: image, secureUrl: image }],
     },
     twitter: { card: 'summary', images: [image] },
   }
