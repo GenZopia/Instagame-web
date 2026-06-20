@@ -2,17 +2,23 @@
 import { useEffect } from 'react'
 import Image from 'next/image'
 
-const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.genzopia.Instagame'
+const PLAY_STORE_APP = 'market://details?id=com.genzopia.Instagame'
+const PLAY_STORE_WEB = 'https://play.google.com/store/apps/details?id=com.genzopia.Instagame'
 
 export default function GameDeeplinkClient({ gameId }: { gameId: string }) {
   useEffect(() => {
-    // Try to open app via deep link
     const appLink = `genzopia://games/${gameId}`
+
+    // Try app deeplink first
     window.location.href = appLink
 
-    // If app not installed, redirect to Play Store after 2s
+    // After 2s, try Play Store app (market://), then web fallback
     const timer = setTimeout(() => {
-      window.location.href = PLAY_STORE
+      window.location.href = PLAY_STORE_APP
+      // If market:// fails (not on Android), fall back to web after 500ms
+      setTimeout(() => {
+        window.location.href = PLAY_STORE_WEB
+      }, 500)
     }, 2000)
 
     // Cleanup if app opens (page becomes hidden)
@@ -52,7 +58,7 @@ export default function GameDeeplinkClient({ gameId }: { gameId: string }) {
         If the app doesn&apos;t open, we&apos;ll take you to the Play Store to install it.
       </p>
       <a
-        href={PLAY_STORE}
+        href={PLAY_STORE_APP}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 10,
           padding: '14px 28px',
