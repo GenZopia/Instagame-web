@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import Image from 'next/image'
 
-const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.genzopia.instagame'
+const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.genzopia.Instagame'
 
 export default function GameDeeplinkClient({ gameId }: { gameId: string }) {
   useEffect(() => {
