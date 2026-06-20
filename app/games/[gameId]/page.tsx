@@ -42,10 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const image = await getGameImage(gameId)
   return {
     openGraph: {
-      images: [{ url: image, width: 1200, height: 630 }],
+      images: [{ url: image, width: 320, height: 320 }],
       url: `https://www.genzopia.com/games/${gameId}`,
     },
-    twitter: { card: 'summary_large_image', images: [image] },
+    twitter: { card: 'summary', images: [image] },
   }
 }
 
