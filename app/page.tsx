@@ -57,7 +57,7 @@ export default function Home() {
           </p>
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
-              href="https://play.google.com/store/apps/details?id=com.genzopia.offlineai&hl=en_IN"
+              href="https://play.google.com/store/apps/details?id=com.genzopia.instagame"
               target="_blank" rel="noopener"
               className="btn-neon"
             >
@@ -154,7 +154,7 @@ export default function Home() {
               Follow creators, discover new titles, and jump into action instantly.
             </p>
             <a
-              href="https://play.google.com/store/apps/details?id=com.genzopia.offlineai&hl=en_IN"
+              href="https://play.google.com/store/apps/details?id=com.genzopia.instagame"
               target="_blank" rel="noopener"
               className="btn-neon"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}
@@ -195,7 +195,7 @@ export default function Home() {
                   <span key={t} style={{ fontSize: '0.78rem', padding: '4px 12px', borderRadius: 20, border: '1px solid #ff6a0044', color: '#ff8c00' }}>{t}</span>
                 ))}
               </div>
-              <a href="https://play.google.com/store/apps/details?id=com.genzopia.offlineai&hl=en_IN" target="_blank" rel="noopener" className="btn-outline" style={{ width: '100%', justifyContent: 'center' }}>
+              <a href="https://play.google.com/store/apps/details?id=com.genzopia.instagame" target="_blank" rel="noopener" className="btn-outline" style={{ width: '100%', justifyContent: 'center' }}>
                 ▶ Play Store
               </a>
             </div>
@@ -320,7 +320,7 @@ export default function Home() {
           &nbsp;·&nbsp;
           <a href="tel:+918767082265" style={{ color: '#ff6a00', textDecoration: 'none' }}>+91 87670 82265</a>
           &nbsp;·&nbsp;
-          <a href="https://play.google.com/store/apps/details?id=com.genzopia.offlineai&hl=en_IN" target="_blank" rel="noopener" style={{ color: '#ff6a00', textDecoration: 'none' }}>Play Store ↗</a>
+          <a href="https://play.google.com/store/apps/details?id=com.genzopia.instagame" target="_blank" rel="noopener" style={{ color: '#ff6a00', textDecoration: 'none' }}>Play Store ↗</a>
         </p>
         <p style={{ marginTop: 16 }}>© {new Date().getFullYear()} Genzopia. All rights reserved.</p>
       </footer>
