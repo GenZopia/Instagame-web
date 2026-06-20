@@ -1,0 +1,122 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange: #ff6a00;
+  --gold: #ffd700;
+  --neon: #ff8c00;
+  --bg: #0a0a0f;
+  --card: #12121a;
+  --border: #ff6a0033;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: #fff;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Neon glow text */
+.glow {
+  text-shadow: 0 0 20px var(--orange), 0 0 40px var(--orange);
+}
+
+/* Gradient text */
+.grad {
+  background: linear-gradient(135deg, var(--orange), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--orange);
+}
+
+/* Neon button */
+.btn-neon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--orange), #ff3c00);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 20px var(--orange)88;
+  transition: box-shadow 0.3s, transform 0.2s;
+  text-decoration: none;
+}
+.btn-neon:hover {
+  box-shadow: 0 0 40px var(--orange);
+  transform: translateY(-2px);
+}
+.btn-neon:active { transform: scale(0.97); }
+
+/* Outline button */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: transparent;
+  border: 2px solid var(--orange);
+  border-radius: 8px;
+  color: var(--orange);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  background: var(--orange);
+  color: #fff;
+}
+
+/* Pulsing ring animation for donate button */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 var(--orange)66; }
+  70% { box-shadow: 0 0 0 20px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.pulse { animation: pulse-ring 2s infinite; }
+
+/* Floating particle bg */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+}
+
+/* Scanlines overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+section { padding: 80px 20px; }
+.container { max-width: 1100px; margin: 0 auto; }
+img { max-width: 100%; }
+
+@media (max-width: 768px) {
+  section { padding: 60px 16px; }
+}
