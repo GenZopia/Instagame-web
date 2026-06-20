@@ -7,30 +7,41 @@ import GameDeeplinkClient from './GameDeeplinkClient'
 
 interface Props { params: Promise<{ gameId: string }> }
 
-// TODO: replace with your actual game API to get title + thumbnail per gameId
-async function getGameMeta(gameId: string) {
+const FIREBASE_DB = 'https://instagame-452906-default-rtdb.firebaseio.com'
+const R2_BASE = 'https://pub-0caba249d019456b9181ce1575ef825e.r2.dev'
+const FALLBACK_IMAGE = 'https://www.genzopia.com/genzopia-banner.png'
+
+async function getGameImage(gameId: string): Promise<string> {
   try {
-    const res = await fetch(`https://api.genzopia.com/games/${gameId}`, { next: { revalidate: 3600 } })
-    if (res.ok) {
-      const data = await res.json()
-      return { title: data.title, image: data.thumbnail }
-    }
-  } catch { /* fallback below */ }
-  return {
-    title: `Play on Genzopia`,
-    image: 'https://www.genzopia.com/genzopia-banner.png',
+    // Fetch game node to get photo_id
+    const gameRes = await fetch(`${FIREBASE_DB}/games/${gameId}.json`, { next: { revalidate: 3600 } })
+    if (!gameRes.ok) return FALLBACK_IMAGE
+    const game = await gameRes.json()
+    if (!game) return FALLBACK_IMAGE
+
+    const photoId: string = game.photo_id
+    if (!photoId) return FALLBACK_IMAGE
+
+    // Fetch photo node to get file_ext
+    const photoRes = await fetch(`${FIREBASE_DB}/photos/${photoId}.json`, { next: { revalidate: 3600 } })
+    if (!photoRes.ok) return FALLBACK_IMAGE
+    const photo = await photoRes.json()
+
+    const fileExt: string = photo?.file_ext
+      ?? photo?.file_name?.split('.').pop()
+      ?? 'jpg'
+
+    return `${R2_BASE}/photo/${photoId}.${fileExt}`
+  } catch {
+    return FALLBACK_IMAGE
   }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { gameId } = await params
-  const { title, image } = await getGameMeta(gameId)
+  const image = await getGameImage(gameId)
   return {
-    title: `${title} – Genzopia`,
-    description: 'Play this game free on Genzopia – 100+ games, no download needed!',
     openGraph: {
-      title: `${title} – Play Free on Genzopia 🎮`,
-      description: 'Tap to play instantly. 100+ free games on Genzopia.',
       images: [{ url: image, width: 1200, height: 630 }],
       url: `https://www.genzopia.com/games/${gameId}`,
     },
