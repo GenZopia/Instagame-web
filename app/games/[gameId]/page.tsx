@@ -14,7 +14,7 @@ const FALLBACK_IMAGE = 'https://www.genzopia.com/genzopia-banner.png'
 async function getGameImage(gameId: string): Promise<string> {
   try {
     // Fetch game node to get photo_id
-    const gameRes = await fetch(`${FIREBASE_DB}/games/${gameId}.json`, { next: { revalidate: 3600 } })
+    const gameRes = await fetch(`${FIREBASE_DB}/games/${gameId}.json`, { cache: 'no-store' })
     if (!gameRes.ok) return FALLBACK_IMAGE
     const game = await gameRes.json()
     if (!game) return FALLBACK_IMAGE
@@ -23,7 +23,7 @@ async function getGameImage(gameId: string): Promise<string> {
     if (!photoId) return FALLBACK_IMAGE
 
     // Fetch photo node to get file_ext
-    const photoRes = await fetch(`${FIREBASE_DB}/photos/${photoId}.json`, { next: { revalidate: 3600 } })
+    const photoRes = await fetch(`${FIREBASE_DB}/photos/${photoId}.json`, { cache: 'no-store' })
     if (!photoRes.ok) return FALLBACK_IMAGE
     const photo = await photoRes.json()
 
