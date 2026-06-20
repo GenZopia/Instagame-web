@@ -7,15 +7,10 @@ const PLAY_STORE_WEB = 'https://play.google.com/store/apps/details?id=com.genzop
 
 export default function GameDeeplinkClient({ gameId }: { gameId: string }) {
   useEffect(() => {
-    // Try app deeplink
-    window.location.href = `genzopia://games/${gameId}`
-    // If app not installed, open Play Store app after 2s
-    const timer = setTimeout(() => {
-      window.location.href = PLAY_STORE_APP
-    }, 2000)
-    const onHide = () => { if (document.hidden) clearTimeout(timer) }
-    document.addEventListener('visibilitychange', onHide)
-    return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', onHide) }
+    // intent:// URI is the most reliable way to deeplink on Android Chrome
+    // It tries the app, and falls back to Play Store automatically
+    const intentUrl = `intent://games/${gameId}#Intent;scheme=genzopia;package=com.genzopia.Instagame;S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_WEB)};end`
+    window.location.href = intentUrl
   }, [gameId])
 
   return (
