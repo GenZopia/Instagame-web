@@ -41,7 +41,11 @@ async function getGameImage(gameId: string): Promise<string> {
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { gameId } = await params
   const { img, name } = await searchParams
-  const image = img ? decodeURIComponent(img) : await getGameImage(gameId)
+  const rawImage = img ? decodeURIComponent(img) : await getGameImage(gameId)
+  // Upscale small thumbnails via Cloudflare Image Resizing for better OG preview
+  const image = rawImage && rawImage !== FALLBACK_IMAGE
+    ? `https://www.genzopia.com/cdn-cgi/image/width=600,height=600,fit=cover,format=jpeg/${rawImage}`
+    : rawImage
   const title = name ? `${decodeURIComponent(name)} – Play Free on Genzopia 🎮` : 'Play Free on Genzopia 🎮'
   const description = name ? `Play ${decodeURIComponent(name)} free on Genzopia – 100+ games, no download needed!` : 'Play free games on Genzopia – 100+ games, no download needed!'
 
@@ -52,7 +56,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       title,
       description,
       url: `https://www.genzopia.com/games/${gameId}`,
-      images: image,
+      images: [{ url: image, width: 600, height: 600 }],
     },
     twitter: { card: 'summary', title, images: [image] },
   }
